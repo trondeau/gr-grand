@@ -34,8 +34,7 @@ namespace gr {
     {
      private:
       int d_sample_rate;
-      int d_size;
-      short *d_buffer;
+      bool d_once;
 
       SLObjectItf d_engine;
       SLEngineItf d_engine_eng;
@@ -43,15 +42,21 @@ namespace gr {
       SLObjectItf d_bq_player_obj;
       SLPlayItf   d_bq_player_play;
       SLAndroidSimpleBufferQueueItf d_bq_player_buffer_queue;
-      SLAndroidSimpleBufferQueueItf d_bq_player_buffer_queue2;
 
      public:
+      int d_size;
+      short *d_buffer;
+      int d_index;
+
       opensl_sink_impl(int sampling_rate);
       ~opensl_sink_impl();
 
       gr::thread::mutex mutex_lock;
       gr::thread::condition_variable condition;
       bool signal;
+
+      void set_sample_rate(int samp_rate);
+      void setup_interface();
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
