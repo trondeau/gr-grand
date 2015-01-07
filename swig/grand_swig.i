@@ -9,8 +9,11 @@
 
 %{
 #include "grand/sensor0.h"
+#include "grand/opensl_source.h"
 %}
 
 
 %include "grand/sensor0.h"
 GR_SWIG_BLOCK_MAGIC2(grand, sensor0);
+%include "grand/opensl_source.h"
+GR_SWIG_BLOCK_MAGIC2(grand, opensl_source);

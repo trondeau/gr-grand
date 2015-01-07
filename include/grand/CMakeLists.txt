@@ -24,5 +24,5 @@ install(FILES
     api.h
     sensor0.h
     opensl_sink.h
-    DESTINATION include/grand
+    opensl_source.h DESTINATION include/grand
 )

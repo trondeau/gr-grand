@@ -28,6 +28,7 @@ link_directories(${Boost_LIBRARY_DIRS})
 list(APPEND grand_sources
     sensor0_impl.cc
     opensl_sink_impl.cc
+    opensl_source_impl.cc
 )
 
 list(APPEND GRAND_LIBS
