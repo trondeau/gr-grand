@@ -29,6 +29,7 @@ list(APPEND grand_sources
     sensor0_impl.cc
     opensl_sink_impl.cc
     opensl_source_impl.cc
+    sensor1_impl.cc
 )
 
 list(APPEND GRAND_LIBS

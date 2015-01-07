@@ -1,6 +1,6 @@
 /* -*- c++ -*- */
 /*
- * Copyright 2014 <+YOU OR YOUR COMPANY+>.
+ * Copyright 2015 <+YOU OR YOUR COMPANY+>.
  *
  * This is free software; you can redistribute it and/or modify
  * it under the terms of the GNU General Public License as published by
@@ -18,22 +18,22 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GRAND_SENSOR0_IMPL_H
-#define INCLUDED_GRAND_SENSOR0_IMPL_H
+#ifndef INCLUDED_GRAND_SENSOR1_IMPL_H
+#define INCLUDED_GRAND_SENSOR1_IMPL_H
 
-#include <grand/sensor0.h>
+#include <grand/sensor1.h>
 #include <android/sensor.h>
 
 namespace gr {
   namespace grand {
 
-    int get_sensor0_event(int fd, int events, void* data);
+    int get_sensor1_event(int fd, int events, void* data);
 
-    class sensor0_impl : public sensor0
+    class sensor1_impl : public sensor1
     {
      private:
       ASensorManager* d_manager;
-      const ASensor* d_accel;
+      const ASensor* d_light;
       struct android_app* d_state;
       ALooper* d_looper;
 
@@ -42,8 +42,8 @@ namespace gr {
      public:
       ASensorEventQueue* d_event_queue;
 
-      sensor0_impl();
-      ~sensor0_impl();
+      sensor1_impl();
+      ~sensor1_impl();
 
       gr::thread::mutex mutex_lock;
       gr::thread::condition_variable condition;
@@ -57,4 +57,4 @@ namespace gr {
   } // namespace grand
 } // namespace gr
 
-#endif /* INCLUDED_GRAND_SENSOR0_IMPL_H */
+#endif /* INCLUDED_GRAND_SENSOR1_IMPL_H */
