@@ -22,8 +22,10 @@
 ########################################################################
 install(FILES
     api.h
+    sensor_base.h
     sensor0.h
+    sensor1.h
     opensl_sink.h
     opensl_source.h
-    sensor1.h DESTINATION include/grand
+    DESTINATION include/grand
 )

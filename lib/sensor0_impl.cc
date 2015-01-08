@@ -26,22 +26,8 @@
 #include <gnuradio/logger.h>
 #include "sensor0_impl.h"
 
-#define MY_LOOPER_ID 3
-
 namespace gr {
   namespace grand {
-
-    int get_sensor0_event(int fd, int events, void* data)
-    {
-      //GR_INFO("grand::sensor0", "LOOPER CALLBACK CALLED");
-
-      sensor0_impl *p = (sensor0_impl*)data;
-      gr::thread::scoped_lock lock(p->mutex_lock);
-      p->signal = true;
-      p->condition.notify_one();
-
-      return 1;
-    }
 
     sensor0::sptr
     sensor0::make()
@@ -53,9 +39,9 @@ namespace gr {
     sensor0_impl::sensor0_impl()
       : gr::sync_block("sensor0",
                        gr::io_signature::make(0, 0, 0),
-                       gr::io_signature::make(3, 3, sizeof(float)))
+                       gr::io_signature::make(3, 3, sizeof(float))),
+        gr::grand::sensor_base(ASENSOR_TYPE_ACCELEROMETER)
     {
-      signal = false;
       set_max_noutput_items(200);
     }
 
@@ -66,65 +52,9 @@ namespace gr {
     bool
     sensor0_impl::start()
     {
-      // Do this in start so that we're in the right thread when we
-      // ask for/prepare the looper that will be used during work with
-      // the callback function get_sensor0_event.
-
-      int result;
-      d_looper = ALooper_forThread();
-      GR_INFO("grand::sensor0", boost::str(boost::format("Got looper: %1%") % d_looper));
-      if(d_looper == NULL) {
-        d_looper = ALooper_prepare(0);
-        GR_INFO("grand::sensor0", boost::str(boost::format("    prepared looper: %1%") % d_looper));
-
-        // If still NULL, we have a problem
-        if(d_looper == NULL) {
-          GR_INFO("grand::sensor0", ("Could not get or prepare a looper"));
-          throw std::runtime_error("grand::sensor0");
-        }
-      }
-
-      // Get singleton to the sensor manager and use to open the accelerometer
-      d_manager = ASensorManager_getInstance();
-      d_accel = ASensorManager_getDefaultSensor(d_manager,
-                                                ASENSOR_TYPE_ACCELEROMETER);
-      if(d_accel == NULL) {
-        GR_INFO("grand::sensor0", "Could not get sensor Acclerometer");
-        throw std::runtime_error("grand::sensor0");
-      }
-
-      // Create an event queue for the sensor
-      d_event_queue = ASensorManager_createEventQueue(d_manager,
-                                                      d_looper,
-                                                      MY_LOOPER_ID,
-                                                      get_sensor0_event, this);
-      if(d_event_queue == NULL) {
-        GR_INFO("grand::sensor0", "Could not create sensor event queue");
-        throw std::runtime_error("grand::sensor0");
-      }
-
-      // Enable the sensor
-      result = ASensorEventQueue_enableSensor(d_event_queue, d_accel);
-      if(result < 0) {
-        GR_INFO("grand::sensor0", "Could not enable sensor Accelerometer");
-        throw std::runtime_error("grand::sensor0");
-      }
-
-      // Get the minimum delay supported by the sensor
-      int min_accel_delay = ASensor_getMinDelay(d_accel);
-      GR_INFO("grand::sensor0", boost::str(boost::format("accelerator's min delay %1%") % min_accel_delay));
-
-      // Set the event rate to the minimum
-      //result = ASensorEventQueue_setEventRate(d_event_queue, d_accel, (1000L/100)*10);
-      result = ASensorEventQueue_setEventRate(d_event_queue, d_accel, min_accel_delay);
-      if(result < 0) {
-        GR_INFO("grand::sensor0", "Could not enable sensor Acclerometer");
-        throw std::runtime_error("grand::sensor0");
-      }
-
+      init();
       return sync_block::start();
     }
-
 
     int
     sensor0_impl::work(int noutput_items,
@@ -142,14 +72,10 @@ namespace gr {
         //GR_INFO("grand::sensor0", boost::str(boost::format("LOOPER POLLED, ret: %1%") % ident));
 
         // Wait for callback to signal us
-        gr::thread::scoped_lock lock(mutex_lock);
-        while(!signal) {
-          condition.wait(lock);
-        }
-        signal = false;
+        block_on_sensor();
 
         if(ident == ALOOPER_POLL_CALLBACK) {
-          if(d_accel != NULL) {
+          if(d_sensor != NULL) {
             ASensorEvent event;
             if(ASensorEventQueue_getEvents(d_event_queue, &event, 1) > 0) {
               //GR_INFO("grand::sensor0", boost::str(boost::format("GETTING DATA: %1%") % event.acceleration.x));

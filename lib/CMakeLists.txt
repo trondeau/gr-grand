@@ -26,10 +26,11 @@ include_directories(${Boost_INCLUDE_DIR})
 link_directories(${Boost_LIBRARY_DIRS})
 
 list(APPEND grand_sources
+    sensor_base.cc
     sensor0_impl.cc
+    sensor1_impl.cc
     opensl_sink_impl.cc
     opensl_source_impl.cc
-    sensor1_impl.cc
 )
 
 list(APPEND GRAND_LIBS

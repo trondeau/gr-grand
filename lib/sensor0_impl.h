@@ -27,27 +27,14 @@
 namespace gr {
   namespace grand {
 
-    int get_sensor0_event(int fd, int events, void* data);
-
     class sensor0_impl : public sensor0
     {
      private:
-      ASensorManager* d_manager;
-      const ASensor* d_accel;
-      struct android_app* d_state;
-      ALooper* d_looper;
-
       bool start();
 
      public:
-      ASensorEventQueue* d_event_queue;
-
       sensor0_impl();
       ~sensor0_impl();
-
-      gr::thread::mutex mutex_lock;
-      gr::thread::condition_variable condition;
-      bool signal;
 
       int work(int noutput_items,
 	       gr_vector_const_void_star &input_items,
