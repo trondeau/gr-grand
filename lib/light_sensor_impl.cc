@@ -24,20 +24,20 @@
 
 #include <gnuradio/io_signature.h>
 #include <gnuradio/logger.h>
-#include "sensor1_impl.h"
+#include "light_sensor_impl.h"
 
 namespace gr {
   namespace grand {
 
-    sensor1::sptr
-    sensor1::make()
+    light_sensor::sptr
+    light_sensor::make()
     {
       return gnuradio::get_initial_sptr
-        (new sensor1_impl());
+        (new light_sensor_impl());
     }
 
-    sensor1_impl::sensor1_impl()
-      : gr::sync_block("sensor1",
+    light_sensor_impl::light_sensor_impl()
+      : gr::sync_block("light_sensor",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(1, 1, sizeof(float))),
         gr::grand::sensor_base(ASENSOR_TYPE_LIGHT)
@@ -45,29 +45,29 @@ namespace gr {
       set_max_noutput_items(200);
     }
 
-    sensor1_impl::~sensor1_impl()
+    light_sensor_impl::~light_sensor_impl()
     {
     }
 
     bool
-    sensor1_impl::start()
+    light_sensor_impl::start()
     {
       init();
       return sync_block::start();
     }
 
     int
-    sensor1_impl::work(int noutput_items,
+    light_sensor_impl::work(int noutput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
       float *out = (float*) output_items[0];
 
-      //GR_INFO("grand::sensor1", boost::str(boost::format("entered: %1%") % noutput_items));
+      //GR_INFO("grand::light_sensor", boost::str(boost::format("entered: %1%") % noutput_items));
 
       for(int i = 0; i < noutput_items; i++) {
         int ident = ALooper_pollOnce(-1, NULL, NULL, NULL);
-        //GR_INFO("grand::sensor1", boost::str(boost::format("LOOPER POLLED, ret: %1%") % ident));
+        //GR_INFO("grand::light_sensor", boost::str(boost::format("LOOPER POLLED, ret: %1%") % ident));
 
         // Wait for callback to signal us
         block_on_sensor();
@@ -82,7 +82,7 @@ namespace gr {
         }
       }
 
-      //GR_INFO("grand::sensor1", boost::str(boost::format("ret: %1% -> %2%") \
+      //GR_INFO("grand::light_sensor", boost::str(boost::format("ret: %1% -> %2%") \
       //                                     % noutput_items % (out[0])));
       return noutput_items;
     }

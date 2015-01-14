@@ -1,7 +1,7 @@
 #!/usr/bin/env python
 # -*- coding: utf-8 -*-
 # 
-# Copyright 2014 <+YOU OR YOUR COMPANY+>.
+# Copyright 2015 <+YOU OR YOUR COMPANY+>.
 # 
 # This is free software; you can redistribute it and/or modify
 # it under the terms of the GNU General Public License as published by
@@ -23,7 +23,7 @@ from gnuradio import gr, gr_unittest
 from gnuradio import blocks
 import grand_swig as grand
 
-class qa_sensor0 (gr_unittest.TestCase):
+class qa_float_array (gr_unittest.TestCase):
 
     def setUp (self):
         self.tb = gr.top_block ()
@@ -38,4 +38,4 @@ class qa_sensor0 (gr_unittest.TestCase):
 
 
 if __name__ == '__main__':
-    gr_unittest.run(qa_sensor0, "qa_sensor0.xml")
+    gr_unittest.run(qa_float_array, "qa_float_array.xml")

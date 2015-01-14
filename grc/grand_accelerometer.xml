@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
-  <name>sensor1</name>
-  <key>grand_sensor1</key>
+  <name>accelerometer</name>
+  <key>grand_accelerometer</key>
   <category>grand</category>
   <import>import grand</import>
-  <make>grand.sensor1()</make>
+  <make>grand.accelerometer()</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name

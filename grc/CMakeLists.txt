@@ -18,7 +18,8 @@
 # Boston, MA 02110-1301, USA.
 
 install(FILES
-    grand_sensor0.xml
+    grand_accelerometer.xml
     grand_opensl_source.xml
-    grand_sensor1.xml DESTINATION share/gnuradio/grc/blocks
+    grand_light_sensor.xml
+    grand_float_array.xml DESTINATION share/gnuradio/grc/blocks
 )

@@ -8,15 +8,18 @@
 %include "grand_swig_doc.i"
 
 %{
-#include "grand/sensor0.h"
+#include "grand/accelerometer.h"
 #include "grand/opensl_source.h"
-#include "grand/sensor1.h"
+#include "grand/light_sensor.h"
+#include "grand/float_array.h"
 %}
 
 
-%include "grand/sensor0.h"
-GR_SWIG_BLOCK_MAGIC2(grand, sensor0);
+%include "grand/accelerometer.h"
+GR_SWIG_BLOCK_MAGIC2(grand, accelerometer);
 %include "grand/opensl_source.h"
 GR_SWIG_BLOCK_MAGIC2(grand, opensl_source);
-%include "grand/sensor1.h"
-GR_SWIG_BLOCK_MAGIC2(grand, sensor1);
+%include "grand/light_sensor.h"
+GR_SWIG_BLOCK_MAGIC2(grand, light_sensor);
+%include "grand/float_array.h"
+GR_SWIG_BLOCK_MAGIC2(grand, float_array);

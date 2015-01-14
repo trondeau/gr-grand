@@ -1,10 +1,10 @@
 <?xml version="1.0"?>
 <block>
-  <name>sensor0</name>
-  <key>grand_sensor0</key>
+  <name>light_sensor</name>
+  <key>grand_light_sensor</key>
   <category>grand</category>
   <import>import grand</import>
-  <make>grand.sensor0()</make>
+  <make>grand.light_sensor()</make>
   <!-- Make one 'param' node for every Parameter you want settable from the GUI.
        Sub-nodes:
        * name

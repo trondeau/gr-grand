@@ -18,41 +18,30 @@
  * Boston, MA 02110-1301, USA.
  */
 
+#ifndef INCLUDED_GRAND_ACCELEROMETER_IMPL_H
+#define INCLUDED_GRAND_ACCELEROMETER_IMPL_H
 
-#ifndef INCLUDED_GRAND_SENSOR0_H
-#define INCLUDED_GRAND_SENSOR0_H
-
-#include <grand/api.h>
-#include <gnuradio/sync_block.h>
-#include <grand/sensor_base.h>
+#include <grand/accelerometer.h>
+#include <android/sensor.h>
 
 namespace gr {
   namespace grand {
 
-    /*!
-     * \brief <+description of block+>
-     * \ingroup grand
-     *
-     */
-    class GRAND_API sensor0
-      : virtual public gr::sync_block,
-        virtual public gr::grand::sensor_base
+    class accelerometer_impl : public accelerometer
     {
-    public:
-      typedef boost::shared_ptr<sensor0> sptr;
+     private:
+      bool start();
 
-      /*!
-       * \brief Return a shared_ptr to a new instance of grand::sensor0.
-       *
-       * To avoid accidental use of raw pointers, grand::sensor0's
-       * constructor is in a private implementation
-       * class. grand::sensor0::make is the public interface for
-       * creating new instances.
-       */
-      static sptr make();
+     public:
+      accelerometer_impl();
+      ~accelerometer_impl();
+
+      int work(int noutput_items,
+	       gr_vector_const_void_star &input_items,
+	       gr_vector_void_star &output_items);
     };
 
   } // namespace grand
 } // namespace gr
 
-#endif /* INCLUDED_GRAND_SENSOR0_H */
+#endif /* INCLUDED_GRAND_ACCELEROMETER_IMPL_H */

@@ -41,5 +41,6 @@ include(GrTest)
 
 set(GR_TEST_TARGET_DEPS gnuradio-grand)
 set(GR_TEST_PYTHON_DIRS ${CMAKE_BINARY_DIR}/swig)
-GR_ADD_TEST(qa_sensor0 ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_sensor0.py)
+GR_ADD_TEST(qa_accelerometer ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_accelerometer.py)
 GR_ADD_TEST(qa_opensl_source ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_opensl_source.py)
+GR_ADD_TEST(qa_float_array ${PYTHON_EXECUTABLE} ${CMAKE_CURRENT_SOURCE_DIR}/qa_float_array.py)

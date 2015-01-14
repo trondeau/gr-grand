@@ -24,20 +24,20 @@
 
 #include <gnuradio/io_signature.h>
 #include <gnuradio/logger.h>
-#include "sensor0_impl.h"
+#include "accelerometer_impl.h"
 
 namespace gr {
   namespace grand {
 
-    sensor0::sptr
-    sensor0::make()
+    accelerometer::sptr
+    accelerometer::make()
     {
       return gnuradio::get_initial_sptr
-        (new sensor0_impl());
+        (new accelerometer_impl());
     }
 
-    sensor0_impl::sensor0_impl()
-      : gr::sync_block("sensor0",
+    accelerometer_impl::accelerometer_impl()
+      : gr::sync_block("accelerometer",
                        gr::io_signature::make(0, 0, 0),
                        gr::io_signature::make(3, 3, sizeof(float))),
         gr::grand::sensor_base(ASENSOR_TYPE_ACCELEROMETER)
@@ -45,19 +45,19 @@ namespace gr {
       set_max_noutput_items(200);
     }
 
-    sensor0_impl::~sensor0_impl()
+    accelerometer_impl::~accelerometer_impl()
     {
     }
 
     bool
-    sensor0_impl::start()
+    accelerometer_impl::start()
     {
       init();
       return sync_block::start();
     }
 
     int
-    sensor0_impl::work(int noutput_items,
+    accelerometer_impl::work(int noutput_items,
                        gr_vector_const_void_star &input_items,
                        gr_vector_void_star &output_items)
     {
@@ -65,11 +65,11 @@ namespace gr {
       float *outy = (float*) output_items[1];
       float *outz = (float*) output_items[2];
 
-      //GR_INFO("grand::sensor0", boost::str(boost::format("entered: %1%") % noutput_items));
+      GR_INFO("grand::accelerometer", boost::str(boost::format("entered: %1%") % noutput_items));
 
       for(int i = 0; i < noutput_items; i++) {
         int ident = ALooper_pollOnce(-1, NULL, NULL, NULL);
-        //GR_INFO("grand::sensor0", boost::str(boost::format("LOOPER POLLED, ret: %1%") % ident));
+        //GR_INFO("grand::accelerometer", boost::str(boost::format("LOOPER POLLED, ret: %1%") % ident));
 
         // Wait for callback to signal us
         block_on_sensor();
@@ -78,7 +78,7 @@ namespace gr {
           if(d_sensor != NULL) {
             ASensorEvent event;
             if(ASensorEventQueue_getEvents(d_event_queue, &event, 1) > 0) {
-              //GR_INFO("grand::sensor0", boost::str(boost::format("GETTING DATA: %1%") % event.acceleration.x));
+              //GR_INFO("grand::accelerometer", boost::str(boost::format("GETTING DATA: %1%") % event.acceleration.x));
               outx[i] = event.acceleration.x;
               outy[i] = event.acceleration.y;
               outz[i] = event.acceleration.z;
@@ -87,7 +87,7 @@ namespace gr {
         }
       }
 
-      //GR_INFO("grand::sensor0", boost::str(boost::format("ret: %1% -> %2%") \
+      //GR_INFO("grand::accelerometer", boost::str(boost::format("ret: %1% -> %2%") \
       //                                     % noutput_items % (outx[0])));
       return noutput_items;
     }

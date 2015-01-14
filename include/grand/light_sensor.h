@@ -18,30 +18,41 @@
  * Boston, MA 02110-1301, USA.
  */
 
-#ifndef INCLUDED_GRAND_SENSOR1_IMPL_H
-#define INCLUDED_GRAND_SENSOR1_IMPL_H
 
-#include <grand/sensor1.h>
-#include <android/sensor.h>
+#ifndef INCLUDED_GRAND_LIGHT_SENSOR_H
+#define INCLUDED_GRAND_LIGHT_SENSOR_H
+
+#include <grand/api.h>
+#include <gnuradio/sync_block.h>
+#include <grand/sensor_base.h>
 
 namespace gr {
   namespace grand {
 
-    class sensor1_impl : public sensor1
+    /*!
+     * \brief <+description of block+>
+     * \ingroup grand
+     *
+     */
+    class GRAND_API light_sensor
+      : virtual public gr::sync_block,
+        virtual public gr::grand::sensor_base
     {
-     private:
-      bool start();
+    public:
+      typedef boost::shared_ptr<light_sensor> sptr;
 
-     public:
-      sensor1_impl();
-      ~sensor1_impl();
-
-      int work(int noutput_items,
-	       gr_vector_const_void_star &input_items,
-	       gr_vector_void_star &output_items);
+      /*!
+       * \brief Return a shared_ptr to a new instance of grand::light_sensor.
+       *
+       * To avoid accidental use of raw pointers, grand::light_sensor's
+       * constructor is in a private implementation
+       * class. grand::light_sensor::make is the public interface for
+       * creating new instances.
+       */
+      static sptr make();
     };
 
   } // namespace grand
 } // namespace gr
 
-#endif /* INCLUDED_GRAND_SENSOR1_IMPL_H */
+#endif /* INCLUDED_GRAND_LIGHT_SENSOR_H */

@@ -23,9 +23,9 @@
 install(FILES
     api.h
     sensor_base.h
-    sensor0.h
-    sensor1.h
+    accelerometer.h
+    light_sensor.h
     opensl_sink.h
     opensl_source.h
-    DESTINATION include/grand
+    float_array.h DESTINATION include/grand
 )

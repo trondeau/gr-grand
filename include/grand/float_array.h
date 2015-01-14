@@ -19,12 +19,12 @@
  */
 
 
-#ifndef INCLUDED_GRAND_SENSOR1_H
-#define INCLUDED_GRAND_SENSOR1_H
+#ifndef INCLUDED_GRAND_FLOAT_ARRAY_H
+#define INCLUDED_GRAND_FLOAT_ARRAY_H
 
 #include <grand/api.h>
 #include <gnuradio/sync_block.h>
-#include <grand/sensor_base.h>
+#include <jni.h>
 
 namespace gr {
   namespace grand {
@@ -34,25 +34,23 @@ namespace gr {
      * \ingroup grand
      *
      */
-    class GRAND_API sensor1
-      : virtual public gr::sync_block,
-        virtual public gr::grand::sensor_base
+    class GRAND_API float_array : virtual public gr::sync_block
     {
-    public:
-      typedef boost::shared_ptr<sensor1> sptr;
+     public:
+      typedef boost::shared_ptr<float_array> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of grand::sensor1.
+       * \brief Return a shared_ptr to a new instance of grand::float_array.
        *
-       * To avoid accidental use of raw pointers, grand::sensor1's
+       * To avoid accidental use of raw pointers, grand::float_array's
        * constructor is in a private implementation
-       * class. grand::sensor1::make is the public interface for
+       * class. grand::float_array::make is the public interface for
        * creating new instances.
        */
-      static sptr make();
+      static sptr make(jfloatArray array, JNIEnv *env);
     };
 
   } // namespace grand
 } // namespace gr
 
-#endif /* INCLUDED_GRAND_SENSOR1_H */
+#endif /* INCLUDED_GRAND_FLOAT_ARRAY_H */
