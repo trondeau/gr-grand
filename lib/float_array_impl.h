@@ -29,15 +29,19 @@ namespace gr {
     class float_array_impl : public float_array
     {
      private:
-      jfloatArray d_array;
       JavaVM *d_vm;
       JNIEnv *d_env;
+      jfloatArray d_array;
+
+      int d_len;
+      int d_index;
+      float * d_cpp_array;
 
      public:
-      float_array_impl(jfloatArray array, JavaVM *vm);
+      float_array_impl(jfloatArray array, int len, JavaVM *vm);
       ~float_array_impl();
 
-      void set_array(jfloatArray array);
+      void set_array(jfloatArray array, int len);
 
       bool start();
       bool stop();

@@ -22,6 +22,7 @@
 #include "config.h"
 #endif
 
+#include <volk/volk.h>
 #include <gnuradio/io_signature.h>
 #include "float_array_impl.h"
 
@@ -29,13 +30,13 @@ namespace gr {
   namespace grand {
 
     float_array::sptr
-    float_array::make(jfloatArray array, JavaVM *vm)
+    float_array::make(jfloatArray array, int len, JavaVM *vm)
     {
       return gnuradio::get_initial_sptr
-        (new float_array_impl(array, vm));
+        (new float_array_impl(array, len, vm));
     }
 
-    float_array_impl::float_array_impl(jfloatArray array, JavaVM *vm)
+    float_array_impl::float_array_impl(jfloatArray array, int len, JavaVM *vm)
       : gr::sync_block("float_array",
                        gr::io_signature::make(1, 1, sizeof(float)),
                        gr::io_signature::make(0, 0, 0))
@@ -43,10 +44,15 @@ namespace gr {
       d_vm = vm;
       d_array = array;
       d_env = NULL;
+      d_index = 0;
+      d_len = len;
+      d_cpp_array = (float*)volk_malloc(d_len*sizeof(float),
+                                        volk_get_alignment());
     }
 
     float_array_impl::~float_array_impl()
     {
+      volk_free(d_cpp_array);
     }
 
     bool
@@ -81,9 +87,15 @@ namespace gr {
     }
 
     void
-    float_array_impl::set_array(jfloatArray array)
+    float_array_impl::set_array(jfloatArray array, int len)
     {
       d_array = array;
+      d_len = len;
+      d_index = 0;
+
+      delete [] d_cpp_array;
+      d_cpp_array = (float*)volk_malloc(d_len*sizeof(float),
+                                        volk_get_alignment());
     }
 
     int
@@ -93,15 +105,24 @@ namespace gr {
     {
       const float *in = (const float*)input_items[0];
 
-      jsize len = d_env->GetArrayLength(d_array);
-      jfloat* array = d_env->GetFloatArrayElements(d_array, NULL);
+      // Lock access to the array until we've written the full d_len
+      if(d_index == 0) {
+        d_env->MonitorEnter(d_array);
+      }
 
-      memcpy(array, in, noutput_items*sizeof(float));
+      int ncopy = std::min((d_len-d_index), noutput_items);
+      memcpy(&d_cpp_array[d_index], in, ncopy*sizeof(float));
+      d_index += ncopy;
 
-      d_env->ReleaseFloatArrayElements(d_array, array, 0);
+      // Have the full array, copy it back to the Java array and
+      // unlock our hold on the data.
+      if(d_index == d_len) {
+        d_env->SetFloatArrayRegion(d_array, 0, d_len, d_cpp_array);
+        d_env->MonitorExit(d_array);
+        d_index = 0;
+      }
 
-      // Tell runtime system how many output items we produced.
-      return noutput_items;
+      return ncopy;
     }
 
   } /* namespace grand */

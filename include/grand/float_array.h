@@ -45,10 +45,11 @@ namespace gr {
        *
        * \param array A global reference to the array from the Java
        *  app. Use (jfloatArray)env->NewGlobalRef([array]).
+       * \param len Length of \p array.
        * \param vm Pointer to the Java Virtual Machine, from which we
        *  will extract the JNI Environment from for the work thread.
        */
-      static sptr make(jfloatArray array, JavaVM *vm);
+      static sptr make(jfloatArray array, int len, JavaVM *vm);
 
       /*!
        * Set the internal array to a new value. Make sure that this is
@@ -56,8 +57,9 @@ namespace gr {
        *
        * \param array A global reference to the array from the Java
        *  app. Use (jfloatArray)env->NewGlobalRef([array]).
+       * \param len Length of \p array.
        */
-      virtual void set_array(jfloatArray array) = 0;
+      virtual void set_array(jfloatArray array, int len) = 0;
     };
 
   } // namespace grand
