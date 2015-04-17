@@ -30,11 +30,17 @@ namespace gr {
     {
      private:
       jfloatArray d_array;
+      JavaVM *d_vm;
       JNIEnv *d_env;
 
      public:
-      float_array_impl(jfloatArray array, JNIEnv *env);
+      float_array_impl(jfloatArray array, JavaVM *vm);
       ~float_array_impl();
+
+      void set_array(jfloatArray array);
+
+      bool start();
+      bool stop();
 
       // Where all the action really happens
       int work(int noutput_items,

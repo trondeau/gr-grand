@@ -30,9 +30,9 @@ namespace gr {
   namespace grand {
 
     /*!
-     * \brief <+description of block+>
+     * \brief Fills an array created in the Java app with samples
+     * passed into this block from the flowgraph.
      * \ingroup grand
-     *
      */
     class GRAND_API float_array : virtual public gr::sync_block
     {
@@ -40,14 +40,24 @@ namespace gr {
       typedef boost::shared_ptr<float_array> sptr;
 
       /*!
-       * \brief Return a shared_ptr to a new instance of grand::float_array.
+       * \brief Return a shared_ptr to a new instance of
+       * grand::float_array.
        *
-       * To avoid accidental use of raw pointers, grand::float_array's
-       * constructor is in a private implementation
-       * class. grand::float_array::make is the public interface for
-       * creating new instances.
+       * \param array A global reference to the array from the Java
+       *  app. Use (jfloatArray)env->NewGlobalRef([array]).
+       * \param vm Pointer to the Java Virtual Machine, from which we
+       *  will extract the JNI Environment from for the work thread.
        */
-      static sptr make(jfloatArray array, JNIEnv *env);
+      static sptr make(jfloatArray array, JavaVM *vm);
+
+      /*!
+       * Set the internal array to a new value. Make sure that this is
+       * a global reference to the Java array.
+       *
+       * \param array A global reference to the array from the Java
+       *  app. Use (jfloatArray)env->NewGlobalRef([array]).
+       */
+      virtual void set_array(jfloatArray array) = 0;
     };
 
   } // namespace grand
