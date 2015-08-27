@@ -82,7 +82,7 @@ namespace gr {
       case 96000:  d_sample_rate = SL_SAMPLINGRATE_96; break;
       case 192000: d_sample_rate = SL_SAMPLINGRATE_192; break;
       default:
-        std::string e = boost::str(boost::format("Invalid sample rateL %1%") % samp_rate);
+        std::string e = boost::str(boost::format("Invalid sample rate: %1%") % samp_rate);
         GR_ERROR("grand::audio_source", e);
         throw std::runtime_error("grand::audio_source");
       }
@@ -228,8 +228,6 @@ namespace gr {
                            gr_vector_void_star &output_items)
     {
       const float *in = (const float*) input_items[0];
-
-      GR_DEBUG("grand::audio_sink", boost::format("noutput_items: %1%") % noutput_items);
 
       float scale_factor = 16384.0f;
 

@@ -210,26 +210,20 @@ namespace gr {
     {
       float *out = (float *) output_items[0];
 
-      GR_DEBUG("grand::audio_source", boost::format("noutput_items: %1%") % noutput_items);
+      float scale_factor = 16384.0f;
 
-      float scale_factor = 1.0f/16384.0f;
-      int count = 0;
-      while(count < noutput_items) {
-        gr::thread::scoped_lock lock(mutex_lock);
-        while(!signal) {
-          condition.wait(lock);
-        }
-        signal = false;
-
-        (*d_recorder_buffer_queue)->Enqueue(d_recorder_buffer_queue,
-                                            d_buffer, d_size*sizeof(short));
-
-        volk_16i_s32f_convert_32f(out, d_buffer, scale_factor, d_size);
-        count += d_size;
+      gr::thread::scoped_lock lock(mutex_lock);
+      while(!signal) {
+        condition.wait(lock);
       }
+      signal = false;
 
-      // Tell runtime system how many output items we produced.
-      return noutput_items;
+      (*d_recorder_buffer_queue)->Enqueue(d_recorder_buffer_queue,
+                                          d_buffer, d_size*sizeof(short));
+
+      volk_16i_s32f_convert_32f(out, d_buffer, scale_factor, d_size);
+
+      return d_size;
     }
 
   } /* namespace grand */
